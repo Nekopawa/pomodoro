@@ -1,0 +1,59 @@
+/* App */
+#timer__container {
+    height: 40%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+/* ModeSelector */
+#mode__selector {
+    width: 100%;
+    color: black;
+}
+
+#mode__selector ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    list-style: none;
+    padding: 0 2rem;
+}
+
+/* TimerDisplay */
+#timer__text {
+    color: #ff69b4;
+    font-size: 3rem;
+}
+
+/* TimerControls */
+#timer-controls__container {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 30px;
+}
+
+#timer-controls__container button {
+    border-radius: 10px;
+    height: 30px;
+    width: 60px;
+}
+
+#button_start {
+    background-color: green;
+    border: green;
+}
+
+#button_pause {
+    background-color: #f76464;
+    border: #f76464;
+}
+
+#button_reset {
+    background-color: lightblue;
+    border: lightblue;
+}
