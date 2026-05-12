@@ -4,24 +4,28 @@ import TimerDisplay from "./components/TimerDisplay.jsx";
 import ModeSelector from "./components/ModeSelector.jsx";
 import TimerControls from "./components/TimerControls.jsx";
 
-function App() {
-    const MODES = {
-        pomodoro: 1500,
-        "short-break": 300,
-        "long-break": 900,
-    };
+const MODES = {
+    pomodoro: 1500,
+    "short-break": 300,
+    "long-break": 900,
+};
 
+function App() {
     const [mode, setMode] = useState(() => {
         return localStorage.getItem("mode")
             ? localStorage.getItem("mode")
             : "pomodoro";
     });
     const [timeLeft, setTimeLeft] = useState(() => {
-        return localStorage.getItem("timeLeft")
-            ? localStorage.getItem("timeLeft")
-            : MODES["pomodoro"];
+        const savedTimeLeft = Number(localStorage.getItem("timeLeft"));
+        return savedTimeLeft ? savedTimeLeft : MODES["pomodoro"];
     });
     const [isRunning, setIsRunning] = useState(false);
+    const [sessionCount, setSessionCount] = useState(() => {
+        return localStorage.getItem("sessionCount")
+            ? Number(localStorage.getItem("sessionCount"))
+            : 0;
+    });
 
     function handleChangeMode(newMode) {
         setMode(newMode);
@@ -47,15 +51,8 @@ function App() {
 
         if (isRunning) {
             interval = setInterval(() => {
-                setTimeLeft((prev) => {
-                    if (prev <= 1) {
-                        setIsRunning(false);
-                        setTimeLeft(0);
-                        return 0;
-                    }
-
-                    return prev - 1;
-                });
+                //garantees time will never be negative
+                setTimeLeft((prevTime) => Math.max(prevTime - 1, 0));
             }, 1000);
         }
 
@@ -71,6 +68,31 @@ function App() {
     useEffect(() => {
         localStorage.setItem("mode", mode);
     }, [mode]);
+
+    useEffect(() => {
+        localStorage.setItem("sessionCount", sessionCount);
+    }, [sessionCount]);
+
+    useEffect(() => {
+        if (!isRunning) return;
+
+        if (timeLeft <= 0) {
+            setIsRunning(false);
+            const nextSessionCount =
+                mode === "pomodoro" ? sessionCount + 1 : sessionCount;
+            let nextMode;
+
+            if (nextSessionCount > 0 && nextSessionCount % 4 === 0) {
+                setSessionCount(0);
+                nextMode = "long-break";
+            } else {
+                setSessionCount(nextSessionCount);
+                nextMode = "short-break";
+            }
+            setMode(nextMode);
+            setTimeLeft(MODES[nextMode]);
+        }
+    }, [timeLeft, isRunning, sessionCount, mode]);
 
     return (
         <main id="timer__container">
