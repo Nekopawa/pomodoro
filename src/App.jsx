@@ -11,8 +11,16 @@ function App() {
         "long-break": 900,
     };
 
-    const [mode, setMode] = useState("pomodoro");
-    const [timeLeft, setTimeLeft] = useState(MODES["pomodoro"]);
+    const [mode, setMode] = useState(() => {
+        return localStorage.getItem("mode")
+            ? localStorage.getItem("mode")
+            : "pomodoro";
+    });
+    const [timeLeft, setTimeLeft] = useState(() => {
+        return localStorage.getItem("timeLeft")
+            ? localStorage.getItem("timeLeft")
+            : MODES["pomodoro"];
+    });
     const [isRunning, setIsRunning] = useState(false);
 
     function handleChangeMode(newMode) {
@@ -42,6 +50,7 @@ function App() {
                 setTimeLeft((prev) => {
                     if (prev <= 1) {
                         setIsRunning(false);
+                        setTimeLeft(0);
                         return 0;
                     }
 
@@ -54,6 +63,14 @@ function App() {
             clearInterval(interval);
         };
     }, [isRunning]);
+
+    useEffect(() => {
+        localStorage.setItem("timeLeft", timeLeft);
+    }, [timeLeft]);
+
+    useEffect(() => {
+        localStorage.setItem("mode", mode);
+    }, [mode]);
 
     return (
         <main id="timer__container">
