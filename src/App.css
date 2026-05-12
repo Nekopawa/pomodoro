@@ -8,6 +8,12 @@
     justify-content: space-around;
 }
 
+@media screen and (min-width: 600px) {
+    #timer__container {
+        width: 50%;
+    }
+}
+
 /* ModeSelector */
 #mode__selector {
     width: 100%;
@@ -46,6 +52,11 @@
 #button_start {
     background-color: green;
     border: green;
+}
+
+#button_start:disabled {
+    background-color: lightslategray;
+    border: lightslategray;
 }
 
 #button_pause {

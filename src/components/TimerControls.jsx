@@ -1,7 +1,7 @@
-function TimerControls({ onStart, onPause, onReset }) {
+function TimerControls({ isRunning, onStart, onPause, onReset }) {
     return (
         <section id="timer-controls__container">
-            <button id="button_start" onClick={onStart}>
+            <button id="button_start" onClick={onStart} disabled={isRunning}>
                 Start
             </button>
             <button id="button_pause" onClick={onPause}>
